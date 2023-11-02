@@ -11,11 +11,14 @@ namespace HumanMachineInterface.UI2
         static void Main(string[] args)
         {
             var isConsole = false;
+            var isConsoleMenu = true;
 
             if (args.Length != 0)
             {
                 if (args[0] == "console")
                     isConsole = true;
+                if (args[0] == "console_menu")
+                    isConsoleMenu = true;
             }
 
             if (isConsole)
@@ -23,6 +26,12 @@ namespace HumanMachineInterface.UI2
                 // Command line given, display console
                 AllocConsole();
                 ConsoleMain();
+            }
+            else if (isConsoleMenu)
+            {
+                // Command line given, display console
+                AllocConsole();
+                ConsoleMenuMain();
             }
             else
             {
@@ -114,6 +123,112 @@ namespace HumanMachineInterface.UI2
                 }
 
                 Console.Write(service.MyPath + "> ");
+            }
+        }
+
+        private static void ConsoleMenuMain()
+        {
+            var service = new Catalog();
+
+            while (true)
+            {
+                Console.WriteLine($"Каталог: {service.MyPath}\n");
+
+                Console.WriteLine("1. Вывод содержимого текущего каталога");
+                Console.WriteLine("2. Смена каталога");
+                Console.WriteLine("3. Вернуться к родительскому каталогу");
+                Console.WriteLine("4. Переместить группу файлов");
+                Console.WriteLine("5. Завершение работы\n");
+
+                Console.Write("Введите номер команды: ");
+
+                var choice = Console.ReadLine();
+
+                if (choice == "1")
+                {
+                    var listItem = service.GetAllItems();
+                    Console.WriteLine();
+
+                    if (listItem.Count == 0)
+                    {
+                        Console.WriteLine("Текущая директория пустая\n");
+                        continue;
+                    }
+                    foreach (var item in listItem)
+                    {
+                        Console.Write(item.Type == CatalogItemType.File ? "f " : "d ");
+                        Console.WriteLine(item.Name);
+                    }
+                }
+                else if (choice == "2")
+                {
+                    Console.Write("Введите абсолютный адрес нового каталога: ");
+                    var directoryName = Console.ReadLine();
+
+                    var result = service.ChangeDirectory(directoryName, true);
+
+                    if (!result.Item1)
+                    {
+                        Console.WriteLine($"(!)Ошибка: {result.Item2}\n");
+                    }
+                }
+                else if (choice == "3")
+                {
+                    var result = service.ChangeDirectoryToBack();
+
+                    if (!result.Item1)
+                    {
+                        Console.WriteLine($"(!)Ошибка: {result.Item2}\n");
+                    }
+                }
+                else if (choice == "4")
+                {
+                    var filesDirectory = service.GetAllItems().Where(i => i.Type == CatalogItemType.File).ToList();
+
+                    if (filesDirectory.Count == 0)
+                    {
+                        Console.WriteLine("В текущей директории отсутствуют файлы\n");
+                        continue;
+                    }
+
+                    int i = 1;
+                    foreach (var file in filesDirectory)
+                    {
+                        Console.WriteLine($"{i} - {file.Name}");
+                        i++;
+                    }
+                    Console.WriteLine();
+
+                    Console.Write("Введите номера файлов через пробел, которые хотите переместить: ");
+                    var str = Console.ReadLine();
+
+                    if (string.IsNullOrEmpty(str))
+                    {
+                        Console.WriteLine("Нужно выбрать файлы\n");
+                        continue;
+                    }
+
+                    var filesId = str.Split(' ').Select(x => int.Parse(x)).ToList();
+                    var files = new List<string>();
+                    foreach (var index in filesId)
+                    {
+                        files.Add(filesDirectory[index - 1].Name);
+                    }
+
+                    Console.Write("Введите абсолютный адрес нового каталога: ");
+                    var directoryName = Console.ReadLine();
+
+                    var result = service.MoveFiles(directoryName, files);
+
+                    if (!result.Item1)
+                    {
+                        Console.WriteLine($"(!)Ошибка: {result.Item2}\n");
+                    }
+                }
+                else if (choice == "5")
+                {
+                    return;
+                }
             }
         }
 
