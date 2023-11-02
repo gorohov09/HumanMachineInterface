@@ -72,7 +72,7 @@ namespace HumanMachineInterface.UI2
 
                         if (!result.Item1)
                         {
-                            Console.WriteLine("Операция невыполнена");
+                            Console.WriteLine(result.Item2);
                         }
                     }
                 }
@@ -89,7 +89,7 @@ namespace HumanMachineInterface.UI2
 
                         if (!result.Item1)
                         {
-                            Console.WriteLine("Операция невыполнена");
+                            Console.WriteLine(result.Item2);
                         }
                     }
                 }
@@ -108,7 +108,7 @@ namespace HumanMachineInterface.UI2
 
                         if (!result.Item1)
                         {
-                            Console.WriteLine("Операция невыполнена");
+                            Console.WriteLine(result.Item2);
                         }
                     }
                 }

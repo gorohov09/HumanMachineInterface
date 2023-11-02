@@ -36,7 +36,7 @@ namespace HumanMachineInterface.UI2
 
                     if (!result.Item1)
                     {
-                        MessageBox.Show("Операция невыполнена");
+                        MessageBox.Show(result.Item2);
                     }
                     else
                     {
@@ -75,7 +75,7 @@ namespace HumanMachineInterface.UI2
 
             if (!result.Item1)
             {
-                MessageBox.Show("Операция невыполнена");
+                MessageBox.Show(result.Item2);
             }
             else
             {
@@ -95,7 +95,7 @@ namespace HumanMachineInterface.UI2
 
                 if (!result.Item1)
                 {
-                    MessageBox.Show("Операция невыполнена");
+                    MessageBox.Show(result.Item2);
                 }
                 else
                 {
@@ -130,7 +130,7 @@ namespace HumanMachineInterface.UI2
 
                 if (!result.Item1)
                 {
-                    MessageBox.Show("Операция невыполнена");
+                    MessageBox.Show(result.Item2);
                 }
                 else
                 {
